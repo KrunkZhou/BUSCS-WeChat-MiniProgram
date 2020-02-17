@@ -1,0 +1,74 @@
+<!--
+ * KRUNK.CN - BU课程表
+ * Made for Brock University 2020 SCS
+ * Dev Website: https://krunk.cn
+ * Date: 2020/02
+->
+
+<!--index.wxml-->
+<view class="container">
+  <view class="userinfo">
+    <button class="login-button" wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 微信登录 </button>
+    <block wx:else>
+      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+    </block>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+  </view>
+
+  <view class="usermotto">
+    <text class="info-title">Hi! {{motto}}</text>
+  </view>
+
+  <view class="info">
+    <view class="navigator-text">点击下方按钮通过 CampusID 登录, 并自动同步课表</view>
+  </view>
+  <view class="login">
+    <navigator url="../user/user" class="navigator">
+      <view class="navigator-text">通过学校账号更新课表</view>
+      <view class="navigator-arrow"></view>
+    </navigator>
+  </view>
+
+
+  <view class="info">
+    <view class="info-title">关于 BU课程表</view>
+    <view class="navigator-text">“BU课程表”是一款帮助布鲁克学生一键导入课程表并随时查看的一款小程序,再也不用通过繁琐的步骤登录浏览器或把课程表设为壁纸啦！点击右上角三个点然后添加到桌面吧！</view>
+    <view class="navigator-text">分享课表: 在主页上点击右上角三个点，选择“发送给朋友”，就能分享课表给好友啦</view>
+    <view class="navigator-text">开源: 项目也将在发布一段时间后开放源代码。</view>
+    <view class='weui-cells weui_cells-after-title'>
+    </view>
+  </view>
+
+
+  <view class="info">
+    <view class="info-title">数据</view>
+    <view class="navigator-text">您所使用的“布鲁克大学”学生账号，仅保存在您的手机本地，并且不会对账号内容进行任何更改，我们的服务端不会储存您的账号，更不会泄漏给其他任何个人和组织。您的账号将仅用于学生课程表导入。</view>
+    <view class="navigator-text" wx:if="{{hasUserInfo}}">您可以通过这个按钮清除所有数据，并删除本地的所有记录 (此操作不会影响到学生账户)  </view>
+  </view>
+
+  
+  <view class="login" wx:if="{{hasUserInfo}}">
+    <view class="navigator clearStorage">
+      <view class="navigator-text" bindtap="clearStorage" >清除我的所有数据</view>
+      <view class="navigator-arrow"></view>
+    </view>
+  </view>
+
+</view>
+
+
+<view class='contact-btn-v'>
+  <view class="info">
+  <view class="contact-info">如果有任何问题或建议也欢迎随时联系我哟!</view>
+  </view>
+  <button class='contact-btn-i' open-type='contact'>联系开发者</button> 
+</view>
+
+
+<view class="info">
+  <view class="copyright">Made with ❤️ by a Group of Brock Students</view>
+  <view class='weui-cells weui_cells-after-title'>
+  </view>
+</view>
+
+<official-account style="width:100%;position:fixed;display:flex;height:84px;background:rgba(0,0,0,0);box-sizing: border-box;bottom:0"></official-account>

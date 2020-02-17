@@ -1,0 +1,36 @@
+/**
+ * KRUNK.CN - BU课程表
+ * Made for Brock University 2020 SCS
+ * Dev Website: https://krunk.cn
+ * Date: 2020/02
+ **/
+
+ /**index.wxss**/
+@import "../index/index.wxss";
+
+.goindex{
+  width: 100%;
+  position:fixed;
+  height:40px;
+  background:rgba(255, 255, 255, 0);
+  box-sizing: border-box;
+  bottom:0;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.goindex-btu{
+  width:70%;
+  align-items: center;
+  text-align: center;
+  color: rgb(0, 0, 0);
+  border: 1.5px solid #c00;
+  border-radius: 10px;
+  background-color: white;
+  padding: 15px 0;
+}

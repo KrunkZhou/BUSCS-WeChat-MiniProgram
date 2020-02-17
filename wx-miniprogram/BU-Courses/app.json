@@ -1,0 +1,52 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/list/list",
+    "pages/user/user",
+    "pages/me/me",
+    "pages/share/share"
+  ],
+  "tabBar": {
+    "color": "#CDC9C9",
+    "selectedColor": "#c00",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "BU课程表",
+        "iconPath": "resources/image/home_gray.png",
+        "selectedIconPath": "resources/image/home.png"
+      },
+      {
+        "pagePath": "pages/list/list",
+        "text": "课程列表",
+        "iconPath": "resources/image/list_gray.png",
+        "selectedIconPath": "resources/image/list.png"
+      },
+      {
+        "pagePath": "pages/me/me",
+        "text": "我的BU",
+        "iconPath": "resources/image/user_gray.png",
+        "selectedIconPath": "resources/image/user.png"
+      }
+    ]
+  },
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#c00",
+    "navigationBarTitleText": "Brock University 课程表",
+    "navigationBarTextStyle": "white",
+    "enablePullDownRefresh": false
+  },
+  "networkTimeout": {
+    "request": 10000,
+    "connectSocket": 10000,
+    "uploadFile": 10000,
+    "downloadFile": 10000
+  },
+  "navigateToMiniProgramAppIdList": [
+    ""
+  ],
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}
