@@ -1,0 +1,54 @@
+/**
+ * KRUNK.CN - BU课程表
+ * Made for Brock University 2020 SCS
+ * Dev Website: https://krunk.cn
+ * Date: 2020/02
+ **/
+
+/* pages/list/list.wxss */
+
+.top{
+  margin-top: 20rpx;
+  margin-bottom: 50rpx;
+}
+.course-date{
+  display: block;
+  text-align: center;
+  align-items: center;
+  /*border: 3px solid rgba(110, 0, 0, 0.288);
+  border-radius: 40rpx;*/
+  margin-top: 30rpx;
+}
+.course-time{
+  display: block;
+  font-size: 35rpx;
+  color: #000;
+}
+.course-name{
+  display: block;
+  font-size: 45rpx;
+  color: rgba(204, 0, 0, 0.855);
+}
+.course-type{
+  display: block;
+  font-size: 40rpx;
+  color: rgb(0, 0, 0);
+}
+.course-length{
+  display: block;
+  font-size: 40rpx;
+  color: rgb(100, 100, 100);
+}
+
+
+.course_card{
+  border: 2px solid rgba(204, 0, 0, 0.301);
+  border-radius: 40rpx;
+  padding: 20rpx 15rpx;
+  margin: 20rpx 40rpx;
+  column-count: 3;
+}
+
+.course_card.active{
+  border: 3px solid rgb(228, 0, 0);
+}
