@@ -1,8 +1,9 @@
 <?php
 /**
- * KRUNK.CN BU课程表 微信小程序API
- * @ Version: 2.2.8
- * @ Date: 2020/02/18
+ * KRUNK.CN BU课程表 微信小程序API - 配置文件
+ * @ Version: 2.2.9
+ * @ Date: 2020/02/20
+ * @ GitHub: https://github.com/KrunkZhou/BUSCS-WeChat-MiniProgram
  */
 
 //数据库设置
@@ -20,9 +21,14 @@ $demo_pw_l = 'demo';
 $demo_user = htmlspecialchars("");
 $demo_pw = htmlspecialchars("");
 
-// buscs 密钥
+// buscs 小程序密钥
 $wx_appid = '';
 $wx_appsecret = '';
+
+//小程序验证码
 $kapi_token = '';
+
+//分享验证码
+$share_token = '';
 
 ?>

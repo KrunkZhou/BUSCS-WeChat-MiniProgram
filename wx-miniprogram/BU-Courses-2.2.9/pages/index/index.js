@@ -122,14 +122,22 @@ Page({
         })
       }catch(e){}
     }
+    var date = new Date();
+    let year = date.getFullYear();
+    let month = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
+    let day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+    let weekdate = util.getWeek(year, month, day);
+    this.setData({
+      today_week: weekdate
+    })
     wx.stopPullDownRefresh();
   },
   onShareAppMessage: function () {
     var that = this;
     try{
       return {
-        title: app.globalData.userInfo.nickName + '与您共享ta的课表 - Brock课表查询神器',
-        path: 'pages/share/share?id=' + wx.getStorageSync("username"),
+        title: app.globalData.userInfo.nickName + '与您共享ta的课表 - Brock 课表查询神器',
+        path: 'pages/share/share?id=' + wx.getStorageSync("username") + '&sharetoken=' + getApp().globalData.share_token,
         success: function (res) {
           // 转发成功
         },
@@ -139,7 +147,7 @@ Page({
       }
     }catch(e){
       return {
-        title: 'Brock University课表查询神器',
+        title: 'Brock University 课表查询神器',
         path: 'pages/index/index',
         success: function (res) {
           // 转发成功

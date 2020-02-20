@@ -63,13 +63,9 @@ Page({
         openid: wx.getStorageSync("openid")
       },
       success: function (resp) {
-        wx.hideToast();
         console.log(resp);
         var resp_dict = resp.data;
         if (resp_dict.code == 1) {
-          wx.showToast({
-            title: '登录成功',
-          });
           wx.setStorage({
             key: 'login',
             data: 1,
@@ -89,10 +85,75 @@ Page({
           wx.switchTab({
             url: "../index/index"
           });
-        } else {
+          wx.hideToast();
+          wx.showToast({
+            title: '登录成功',
+          });
+        } else if (resp_dict.code == 0){
           wx.hideToast();
           console.log(resp.data);
           getApp().showErrModal('用户名或密码错误');
+        }else{
+          //wx.hideToast();
+          console.log(resp.data);
+          //getApp().showErrModal('无法连接到服务器');
+          wx.showToast({
+            title: '备用服务器',
+            icon: 'loading'
+          });
+          
+          //连接备用服务器
+          wx.request({
+            url: getApp().globalData.backup_url + "login.php",
+            method: "post",
+            header: { "content-type": "application/x-www-form-urlencoded" },
+            data: {
+              un: encodeURI(that.data.username),
+              pw: that.data.password,
+              ui: JSON.stringify(getApp().globalData.userInfo),
+              token: getApp().globalData.kapi_token,
+              openid: wx.getStorageSync("openid")
+            },
+            success: function (resp) {
+              console.log(resp);
+              var resp_dict = resp.data;
+              if (resp_dict.code == 1) {
+                wx.setStorage({
+                  key: 'login',
+                  data: 1,
+                });
+                wx.setStorage({
+                  key: 'username',
+                  data: that.data.username,
+                })
+                wx.setStorage({
+                  key: 'course_index',
+                  data: resp_dict.course_index,
+                })
+                wx.setStorage({
+                  key: 'course_list',
+                  data: resp_dict.course_list,
+                })
+                wx.switchTab({
+                  url: "../index/index"
+                });
+                wx.hideToast();
+                wx.showToast({
+                  title: '登录成功',
+                });
+              } else if (resp_dict.code == 0) {
+                wx.hideToast();
+                console.log(resp.data);
+                getApp().showErrModal('用户名或密码错误');
+              } else {
+                wx.hideToast();
+                console.log(resp.data);
+                getApp().showErrModal('无法连接到备用服务器');
+              }
+            }
+          })
+
+
         }
       }
     })

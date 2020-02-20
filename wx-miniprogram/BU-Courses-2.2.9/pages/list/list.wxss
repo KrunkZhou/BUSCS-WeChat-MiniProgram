@@ -31,12 +31,12 @@
 }
 .course-type{
   display: block;
-  font-size: 40rpx;
-  color: rgb(0, 0, 0);
+  font-size: 39rpx;
+  color: rgb(41, 41, 41);
 }
 .course-length{
   display: block;
-  font-size: 40rpx;
+  font-size: 39rpx;
   color: rgb(100, 100, 100);
 }
 

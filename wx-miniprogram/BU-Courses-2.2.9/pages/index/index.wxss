@@ -107,7 +107,7 @@
 .day-text {
   width: 140rpx;
   height: 100%;
-  font-size: 28rpx;
+  font-size: 24rpx;
   justify-content: center;
   display: flex;
   flex-direction: column;
@@ -120,6 +120,7 @@
 
 .day-text.active text {
   color: #fff !important;
+  font-size: 34rpx;
 }
 
 .day-text text:first-child {

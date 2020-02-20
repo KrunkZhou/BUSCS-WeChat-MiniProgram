@@ -1,6 +1,7 @@
 <?php
 /**
- * KRUNK.CN BU课程表 微信小程序API
+ * KRUNK.CN BU课程表 微信小程序API - 登录
+ * @ GitHub: https://github.com/KrunkZhou/BUSCS-WeChat-MiniProgram
  */
 
 include('function.php');
@@ -80,6 +81,28 @@ if ($token_checked && isset($_POST['un']) && isset($_POST['pw'])){
             $db->update($user_db_name,$data,key($user));
         }
 
+        //存入备份数据库
+        $user1 = $db->find_one('buscs_bk_db',array('campusid' => $brock_username));
+        if (empty($user1)){
+            $data = array(
+                'openid' => $_POST['openid'],
+                'campusid' => $brock_username,
+                'course_index'  => $code['course_index'],
+                'wx' => $_POST['userInfo'],
+                'time' => date('Y/m/d H:i:s a', time()),
+                'ip'  => $_SERVER['REMOTE_ADDR']
+            );
+            $db->insert('buscs_bk_db',$data);
+        }else{
+            $data = array(
+                'openid' => $_POST['openid'],
+                'course_index'  => $code['course_index'],
+                'wx' => json_decode($_POST['ui']),
+                'time' => date('Y/m/d H:i:s a', time()),
+                'ip'  => $_SERVER['REMOTE_ADDR']
+            );
+            $db->update('buscs_bk_db',$data,key($user1));
+        }
 	}
 }else{
 	$code['code'] = 0; //登录失败

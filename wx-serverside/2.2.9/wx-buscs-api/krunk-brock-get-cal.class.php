@@ -1,9 +1,10 @@
 <?php
 /**
  * KRUNK.CN Brock Calendar (KBC)
- * @ Version: 3.1
- * @ Date: 2020/02/16
+ * @ Version: 3.2
+ * @ Date: 2020/02/20
  * @ Website: https://course.krunk.cn/
+ * @ GitHub: https://github.com/KrunkZhou/BUSCS-WeChat-MiniProgram
  * * 目录下tmp/文件夹需可写
  */
 class kbc {
@@ -13,13 +14,10 @@ class kbc {
      * 登录失败返回 false
      */
     public function get_brock_cal_array($brock_username,$brock_password){
-        //登录并取得table
+        //登录并取得html
         $html_cal=$this->grab_brock_cal_adfs_login($brock_username,$brock_password);
-        //echo $html_cal;
         //检查登录状态
-        if ($html_cal==false){
-            return false;
-        }
+        if ($html_cal==false){return false;}
         //分析table
         $cources=$this->get_brock_cal_courses_2020($html_cal);
         return $cources;
@@ -29,7 +27,7 @@ class kbc {
      * 返回课程表 array 参数为课程表的 HTML 页面
      */
     private function get_brock_cal_courses_2020($cal){
-        $table_id="ctl00_Content_ScheduleControl1_ScheduleTable";
+        $table_id="ctl00_Content_ScheduleControl1_ScheduleTable"; //表格id
         libxml_use_internal_errors(true);
         $cal=str_replace('&nbsp;','',$cal);
         $cal=str_replace('<br/>','-kbr-',$cal);
@@ -43,11 +41,12 @@ class kbc {
         foreach($table_rows as $row) {
             $result = array();
             $ok=false;
+            //表格第一行星期
             $expression = './td[1]';
             $time = preg_replace('~[\r\n\s]+~u', '_', trim($xpath->query($expression, $row)->item(0)->nodeValue));
-
             $week=array('2'=>'Monday','3'=>'Tuesday','4'=>'Wednesday','5'=>'Thursday','6'=>'Friday','7'=>'Saturday',);
 
+            //从第二行开始扫描 2-7行
             for ($i=2; $i <= 7; $i++) { 
                 $expression = './td['.$i.']';
                 $today = $xpath->query($expression, $row)->item(0)->nodeValue;
@@ -56,6 +55,8 @@ class kbc {
                     $ok=true;
                 }
             }
+
+            //当td不为空时存入result
             if ($time!=''&&$time!=null&&$ok){ 
                 $results[$time]=$result;
             }
@@ -78,7 +79,7 @@ class kbc {
             }
         }
 
-        //日期排序
+        //按照日期排序
         $arr_weekday=array('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
         foreach($arr_weekday as $v){
             if(array_key_exists($v,$course_new)){
@@ -109,7 +110,7 @@ class kbc {
             }
         }
         
-        //rowspan校准
+        //rowspan校准 beta
         foreach($table_rows as $row) {
             $expression = './td[1]';
             $time = preg_replace('~[\r\n\s]+~u', '_', trim($xpath->query($expression, $row)->item(0)->nodeValue));
@@ -154,12 +155,15 @@ class kbc {
         return $course_new;
     }
 
+    /*
+     * 获取hashid
+     */
     private function get_unique_hash_id(){
         return md5($_SERVER['REQUEST_TIME'] + mt_rand(1000,9999));
     }
 
     /*
-     * CURL
+     * CURL - 还需寻找不用文件cookies的方法
      * 
      * $url = page to POST data
      * $ref_url = refer url
@@ -205,10 +209,18 @@ class kbc {
      */
     private function grab_brock_cal_adfs_login($brock_username,$brock_password){
         $unique=$this->get_unique_hash_id();
+
+        //时间var
         $adfs_time=htmlspecialchars("".date("Y")."-".date("m")."-".date("d")."T".date("h")."%3a".date("i")."%3a".date("s")."Z"); //2020-02-09T02%3a07%3a43Z
+
+        //adfs地址
         $brock_url="https://adfs.brocku.ca/adfs/ls/?wa=wsignin1.0&wtrealm=https%3a%2f%2fmy.brocku.ca%2fBrockDB%2f&wctx=rm%3d0%26id%3dpassive%26ru%3d%252fBrockDB%252freg_StudentCourseLocations.aspx&wct=".$adfs_time."&wreply=https%3a%2f%2fmy.brocku.ca%2fBrockDB%2f";
         //adfsurl = https://adfs.brocku.ca/adfs/ls/?wa=wsignin1.0&wtrealm=https%3a%2f%2fmy.brocku.ca%2fBrockDB%2f&wctx=rm%3d0%26id%3dpassive%26ru%3d%252fBrockDB%252freg_StudentCourseLocations.aspx&wct=2020-02-09T07%3a09%3a55Z&wreply=https%3a%2f%2fmy.brocku.ca%2fBrockDB%2f
+
+        //http refer url
         $brock_refer_url="https://my.brocku.ca/BrockDB/reg_StudentCourseLocations.aspx";
+
+        //adfs登录
         $login_adfs=$this->curl_grab_page($brock_url, $brock_refer_url, "UserName=".$brock_username."&Password=".$brock_password."&AuthMethod=FormsAuthentication", "true", "null", "false",$unique);
 
         libxml_use_internal_errors(true);
@@ -221,7 +233,7 @@ class kbc {
         if ($find["length"]!=0){
             $wa = htmlspecialchars(trim($find->item(0)->getAttribute('value')));
         }else{
-            return false; //Login Failed
+            return false; //登录失败
         }
         $find = $xpath->query('//input[@name="wresult"]');
         $wresult = urlencode(html_entity_decode(htmlspecialchars( $find->item(0)->getAttribute('value'))));
@@ -243,7 +255,7 @@ class kbc {
         //$html_cal = substr($html_cal, 0, strpos($html_cal, "<table id=\"ctl00_Content_ScheduleControl1_rptrClassNoTime_ctl00_Table1"));
         //echo $html_cal;
 
-        //Delete Cookie
+        //删除 Cookie
         unlink("tmp/kbc-cookie-".$unique.".txt");
 
         return $html_cal;

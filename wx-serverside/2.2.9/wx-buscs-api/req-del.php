@@ -1,6 +1,7 @@
 <?php
 /**
- * KRUNK.CN BU课程表 微信小程序API
+ * KRUNK.CN BU课程表 微信小程序API - 请求删除
+ * @ GitHub: https://github.com/KrunkZhou/BUSCS-WeChat-MiniProgram
  */
 
 include('function.php');

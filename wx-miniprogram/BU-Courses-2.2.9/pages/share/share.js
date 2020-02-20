@@ -51,38 +51,50 @@ Page({
     })
 
     var share_id = options.id;
+    var share_token = options.sharetoken;
 
-    wx.showToast({
-      title: '正在加载',
-      icon: 'loading'
-    });
+    if (share_token == getApp().globalData.share_token){
 
-    wx.request({
-      url: getApp().globalData.base_url + "share.php",
-      method: "post",
-      header: { "content-type": "application/x-www-form-urlencoded" },
-      data: {
-        share_id: share_id,
-        token: getApp().globalData.kapi_token,
-        openid: wx.getStorageSync("openid")
-      },
-      success: function (resp) {
-        console.log(resp);
-        var resp_dict = resp.data;
-        if (resp_dict.code == 1) {
-          wx.hideToast();
-          that.setData({
-            hasUserInfo: true,
-            course_share: JSON.parse(resp_dict.course_share)
-          })
-        } else {
-          console.log(resp.data);
-          wx.hideToast();
-          getApp().showErrModal('未找到数据');
+      wx.showToast({
+        title: '正在加载',
+        icon: 'loading'
+      });
+
+      wx.request({
+        url: getApp().globalData.base_url + "share.php",
+        method: "post",
+        header: { "content-type": "application/x-www-form-urlencoded" },
+        data: {
+          share_id: share_id,
+          token: getApp().globalData.kapi_token,
+          openid: wx.getStorageSync("openid"),
+          sharetoken: share_token
+        },
+        success: function (resp) {
+          console.log(resp);
+          var resp_dict = resp.data;
+          if (resp_dict.code == 1) {
+            wx.hideToast();
+            that.setData({
+              hasUserInfo: true,
+              course_share: JSON.parse(resp_dict.course_share)
+            })
+          } else if (resp_dict.code == 2) {
+            console.log(resp.data);
+            wx.hideToast();
+            getApp().showErrModal('Token 验证失败 (1)');
+          } else {
+            console.log(resp.data);
+            wx.hideToast();
+            getApp().showErrModal('未找到数据');
+          }
         }
-      }
-    })
+      })
 
+    }else{
+      getApp().showErrModal('Token 验证失败 (0)');
+      console.log('Share Token Error');
+    }
 
   },
 

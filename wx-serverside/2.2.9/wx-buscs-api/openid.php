@@ -1,6 +1,7 @@
 <?php
 /**
- * KRUNK.CN BU课程表 微信小程序API
+ * KRUNK.CN BU课程表 微信小程序API - 获取openid
+ * @ GitHub: https://github.com/KrunkZhou/BUSCS-WeChat-MiniProgram
  */
 
 include('function.php');
@@ -36,13 +37,15 @@ if ($token_checked && isset($_POST['code'])){
 		$data = array(
 	        'openid' => $code['openid'],
 	        'time' => date('Y/m/d H:i:s a', time()),
-	        'ip'  => $_SERVER['REMOTE_ADDR']
+	        'ip'  => $_SERVER['REMOTE_ADDR'],
+	        'count'  => 1
 	    );
 	    $db->insert($openid_db_name,$data);
 	}else{
 	    $data = array(
 	        'time' => date('Y/m/d H:i:s a', time()),
-	        'ip'  => $_SERVER['REMOTE_ADDR']
+	        'ip'  => $_SERVER['REMOTE_ADDR'],
+	        'count'  => $user[key($user)]['count']+1
 	    );
 	    $db->update($openid_db_name,$data,key($user));
 	}

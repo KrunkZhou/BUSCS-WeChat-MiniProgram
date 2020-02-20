@@ -21,6 +21,7 @@ App({
     //logs.unshift(Date.now())
     //wx.setStorageSync('logs', logs)
 
+    var that=this;
     // 登录
     wx.login({
       success: res => {
@@ -43,11 +44,39 @@ App({
                 data: resp_dict.openid,
               });
             } else {
-              console.log(resp.data);
-              console.log('Token错误');
-              wx.showToast({
-                title: '离线模式',
-              });
+
+              //连接备用服务器
+              wx.request({
+                url: that.globalData.backup_url + "openid.php",
+                method: "post",
+                header: { "content-type": "application/x-www-form-urlencoded" },
+                data: {
+                  token: that.globalData.kapi_token,
+                  code: res.code
+                },
+                success: function (resp) {
+                  console.log(resp);
+                  var resp_dict = resp.data;
+                  if (resp_dict.code == 1) {
+                    wx.setStorage({
+                      key: 'openid',
+                      data: resp_dict.openid,
+                    });
+                  } else {
+                    console.log(resp.data);
+                    console.log('Token错误');
+                    wx.showToast({
+                      title: '离线模式',
+                    });
+                  }
+                }
+              })
+
+              // console.log(resp.data);
+              // console.log('Token错误');
+              // wx.showToast({
+              //   title: '离线模式',
+              // });
             }
           }
         })
@@ -77,7 +106,9 @@ App({
   },
   globalData: {
     base_url: 'https://domain.com/',
+    backup_url: 'https://domain.com/',
     kapi_token: '',
+    share_token: '',
     userInfo: null
   }
 })
